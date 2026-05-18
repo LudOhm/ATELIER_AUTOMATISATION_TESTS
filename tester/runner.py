@@ -1,43 +1,44 @@
-import time
-import statistics
-from tester.client import get
 from tester import tests
+from tester.client import api_get
+import statistics
 
-API_URL = "https://api.agify.io?name=michael"
 
-TESTS = [
-    ("status_code", tests.test_status),
-    ("json_valid", tests.test_json),
-    ("has_name", tests.test_has_name),
-    ("has_age", tests.test_has_age),
-]
-
-def run_tests():
+def run_all_tests():
     results = []
+
+    test_functions = [
+        ("status code", tests.test_status_code),
+        ("json exists", tests.test_json_exists),
+        ("name field", tests.test_name_field),
+        ("age field", tests.test_age_field),
+        ("age type", tests.test_age_type),
+        ("empty name", tests.test_empty_name),
+    ]
+
     latencies = []
 
-    for i in range(10):  # N requêtes pour stats QoS
-        resp = get(API_URL)
-        if resp["latency_ms"]:
-            latencies.append(resp["latency_ms"])
+    for name, fn in test_functions:
+        ok = fn()
 
-        for name, test in TESTS:
-            results.append({
-                "test": name,
-                "result": test(resp)
-            })
+        r = api_get({"name": "michael"})
+        latencies.append(r["latency_ms"])
 
-    passed = sum(r["result"] for r in results)
+        results.append({
+            "name": name,
+            "status": "PASS" if ok else "FAIL",
+            "latency_ms": r["latency_ms"]
+        })
+
+    passed = sum(1 for r in results if r["status"] == "PASS")
     failed = len(results) - passed
 
     return {
-        "api": "Agify",
-        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
         "summary": {
             "passed": passed,
             "failed": failed,
-            "latency_avg": statistics.mean(latencies) if latencies else None,
-            "latency_p95": statistics.quantiles(latencies, n=20)[18] if len(latencies) > 5 else None
+            "error_rate": failed / len(results),
+            "latency_avg": round(statistics.mean(latencies), 2),
+            "latency_p95": round(max(latencies), 2)
         },
-        "details": results
+        "tests": results
     }

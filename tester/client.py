@@ -1,28 +1,31 @@
 import requests
 import time
 
-def get(url, timeout=3):
+BASE_URL = "https://api.agify.io"
+
+
+def api_get(params=None):
     start = time.time()
+
     try:
-        r = requests.get(url, timeout=timeout)
-        latency = (time.time() - start) * 1000
+        r = requests.get(
+            BASE_URL,
+            params=params,
+            timeout=3
+        )
+
+        latency = round((time.time() - start) * 1000, 2)
+
         return {
             "status_code": r.status_code,
-            "json": safe_json(r),
-            "latency_ms": latency,
-            "ok": r.ok
-        }
-    except Exception as e:
-        return {
-            "status_code": None,
-            "json": None,
-            "latency_ms": None,
-            "ok": False,
-            "error": str(e)
+            "json": r.json(),
+            "latency_ms": latency
         }
 
-def safe_json(response):
-    try:
-        return response.json()
-    except:
-        return None
+    except requests.exceptions.Timeout:
+        return {
+            "status_code": 0,
+            "json": {},
+            "latency_ms": 3000,
+            "error": "timeout"
+        }

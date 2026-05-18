@@ -1,21 +1,33 @@
 from flask import Flask, render_template, jsonify
-from tester.runner import run_tests
-from storage import init_db, save_run, get_runs
+from tester.runner import run_all_tests
+from storage import init_db, save_run
 
 app = Flask(__name__)
-
 init_db()
 
-@app.get("/")
-def home():
-    return render_template("dashboard.html", runs=get_runs())
 
-@app.get("/run")
+@app.route("/")
+def home():
+    return render_template("consignes.html")
+
+
+@app.route("/run")
 def run():
-    result = run_tests()
+    result = run_all_tests()
     save_run(result)
     return jsonify(result)
 
-@app.get("/api/runs")
-def api_runs():
-    return jsonify(get_runs())
+
+@app.route("/health")
+def health():
+    return jsonify({"status": "OK"})
+
+
+@app.route("/dashboard")
+def dashboard():
+    result = run_all_tests()
+    return render_template("dashboard.html", data=result)
+
+
+if __name__ == "__main__":
+    app.run(debug=True)
