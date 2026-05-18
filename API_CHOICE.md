@@ -1,13 +1,24 @@
 # API Choice
 
-- Étudiant :
-- API choisie :
-- URL base :
-- Documentation officielle / README :
-- Auth : None / API Key / OAuth
+- Étudiant : Ludivine PERRIER-BABIN
+- API choisie : Agify
+- URL base : https://api.agify.io
+- Documentation officielle / README : https://agify.io
+- Auth : None
+
 - Endpoints testés :
-  - GET ...
-  - GET ...
-- Hypothèses de contrat (champs attendus, types, codes) :
+  - GET https://api.agify.io?name=michael
+  - GET https://api.agify.io?name=
+
+- Hypothèses de contrat :
+  - code HTTP attendu : 200
+  - réponse au format JSON
+  - champs attendus : name (string), age (int), count (int)
+
 - Limites / rate limiting connu :
-- Risques (instabilité, downtime, CORS, etc.) :
+  - pas de clé requise
+  - limiter les appels pour éviter le spam
+
+- Risques :
+  - indisponibilité temporaire
+  - timeout réseau

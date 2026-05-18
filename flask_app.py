@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify
 from tester.runner import run_all_tests
-from storage import init_db, save_run
+from storage import init_db, save_run, list_runs
 
 app = Flask(__name__)
 init_db()
@@ -27,6 +27,10 @@ def health():
 def dashboard():
     result = run_all_tests()
     return render_template("dashboard.html", data=result)
+
+@app.route("/history")
+def history():
+    return jsonify(list_runs())
 
 
 if __name__ == "__main__":
