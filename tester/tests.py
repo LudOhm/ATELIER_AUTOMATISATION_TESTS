@@ -23,7 +23,7 @@ def test_age_field():
 
 def test_age_type():
     r = api_get({"name": "michael"})
-    return isinstance(r["json"]["age"], int)
+    return isinstance(r["json"].get("age"), int)
 
 
 def test_empty_name():
