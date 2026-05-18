@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify
 from tester.runner import run_all_tests
-from storage import init_db, save_run, list_runs
+from storage import init_db, save_run
 
 app = Flask(__name__)
 init_db()
