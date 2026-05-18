@@ -1,0 +1,19 @@
+<!doctype html>
+<html>
+<head>
+  <title>Dashboard API Tests</title>
+</head>
+<body>
+  <h1>Runs</h1>
+
+  {% for timestamp, run in runs %}
+    <div style="border:1px solid #ccc; margin:10px; padding:10px;">
+      <b>{{ timestamp }}</b><br>
+      API: {{ run.api }}<br>
+      Passed: {{ run.summary.passed }}<br>
+      Failed: {{ run.summary.failed }}<br>
+      Avg latency: {{ run.summary.latency_avg }}
+    </div>
+  {% endfor %}
+</body>
+</html>

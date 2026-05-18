@@ -1,16 +1,21 @@
-from flask import Flask, render_template_string, render_template, jsonify, request, redirect, url_for, session
-from flask import render_template
-from flask import json
-from urllib.request import urlopen
-from werkzeug.utils import secure_filename
-import sqlite3
+from flask import Flask, render_template, jsonify
+from tester.runner import run_tests
+from storage import init_db, save_run, get_runs
 
 app = Flask(__name__)
 
-@app.get("/")
-def consignes():
-     return render_template('consignes.html')
+init_db()
 
-if __name__ == "__main__":
-    # utile en local uniquement
-    app.run(host="0.0.0.0", port=5000, debug=True)
+@app.get("/")
+def home():
+    return render_template("dashboard.html", runs=get_runs())
+
+@app.get("/run")
+def run():
+    result = run_tests()
+    save_run(result)
+    return jsonify(result)
+
+@app.get("/api/runs")
+def api_runs():
+    return jsonify(get_runs())
