@@ -1,24 +1,22 @@
 # API Choice
-
 - Étudiant : Ludivine PERRIER-BABIN
-- API choisie : Agify
-- URL base : https://api.agify.io
-- Documentation officielle / README : https://agify.io
+- API choisie : Frankfurter
+- URL base : https://api.frankfurter.app
+- Documentation officielle / README : https://frankfurter.dev
 - Auth : None
-
 - Endpoints testés :
-  - GET https://api.agify.io?name=michael
-  - GET https://api.agify.io?name=
-
+  - GET https://api.frankfurter.app/latest
+  - GET https://api.frankfurter.app/latest?from=EUR&to=USD
+  - GET https://api.frankfurter.app/latest?from=INVALID
 - Hypothèses de contrat :
-  - code HTTP attendu : 200
+  - code HTTP attendu : 200 (400 pour devise invalide)
   - réponse au format JSON
-  - champs attendus : name (string), age (int), count (int)
-
+  - champs attendus : amount (float), base (string), date (string), rates (object)
 - Limites / rate limiting connu :
   - pas de clé requise
-  - limiter les appels pour éviter le spam
-
+  - pas de quota documenté, usage raisonnable recommandé
 - Risques :
   - indisponibilité temporaire
   - timeout réseau
+- Raison du changement :
+  - Agify bloquait les requêtes depuis les IPs partagées de PythonAnywhere (quota journalier épuisé, erreur "Request limit reached")
