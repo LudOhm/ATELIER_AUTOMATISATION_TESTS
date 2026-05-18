@@ -29,12 +29,3 @@ def save_run(data):
     conn.commit()
     conn.close()
 
-
-def list_runs():
-    conn = sqlite3.connect(DB_PATH)
-    c = conn.cursor()
-
-    rows = c.execute("SELECT * FROM runs").fetchall()
-
-    conn.close()
-    return rows

@@ -28,9 +28,6 @@ def dashboard():
     result = run_all_tests()
     return render_template("dashboard.html", data=result)
 
-@app.route("/history")
-def history():
-    return jsonify(list_runs())
 
 
 if __name__ == "__main__":
